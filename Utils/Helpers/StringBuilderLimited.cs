@@ -2,6 +2,7 @@
 
 namespace Utils.Helpers
 {
+    /// <summary>Декоратор StringBuilder с ограничением кол-ва строк </summary>
     public class StringBuilderLimited
     {
         private const int LimitDefault = 1000;

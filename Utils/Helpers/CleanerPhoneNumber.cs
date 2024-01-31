@@ -6,7 +6,8 @@ using Utils.Extensions;
 
 namespace Utils.Helpers
 {
-	public class CleanerPhoneNumber
+    /// <summary> Удаление номера телефона в строковых свойствах объекта </summary>
+    public class CleanerPhoneNumber
 	{
 		public IEnumerable<string> Regions { get; set; } = new[] { "RU" };
 		public CleanerPhoneNumber() { }
