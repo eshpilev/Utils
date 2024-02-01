@@ -46,7 +46,7 @@ namespace ParallelPages
                 throw new ArgumentNullException(nameof(Producer));
         }
 
-        private void LoadPages(Func<int, IEnumerable<T>> loader, BlockingCollection<T> buffer)
+        private IEnumerable<int> LoadPages(Func<int, IEnumerable<T>> loader, BlockingCollection<T> buffer)
         {
             if (MaxDegreeOfParallelism <= 0)
                 MaxDegreeOfParallelism = 1;
@@ -56,20 +56,34 @@ namespace ParallelPages
                 MaxDegreeOfParallelism = MaxDegreeOfParallelism
             };
 
-            Parallel.ForEach(InfinitePages(), parallelOptions, (page, loopState) =>
+            var errorPages = new List<int> { };
+            try
             {
-                var items = loader(page)?.ToArray();
-                if (items != null && items.Any())
+                Parallel.ForEach(InfinitePages(), parallelOptions, (page, loopState) =>
                 {
-                    foreach (var item in items)
-                        buffer.Add(item);
-                }
-                else
-                    loopState.Break();
+                    try
+                    {
+                        var items = loader(page)?.ToArray();
+                        if (items != null && items.Any())
+                        {
+                            foreach (var item in items)
+                                buffer.Add(item);
+                        }
+                        else
+                            loopState.Break();
+                    }
+                    catch
+                    {
+                        errorPages.Add(page);
+                    }                    
+                });
+            }
+            finally
+            {
+                buffer.CompleteAdding();
+            }
 
-            });
-
-            buffer.CompleteAdding();
+            return errorPages;
         }
 
 
