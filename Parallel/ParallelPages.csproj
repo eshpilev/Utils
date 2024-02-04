@@ -10,4 +10,8 @@
     <PackageReference Include="WireMock.Net" Version="1.5.47" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+  </ItemGroup>
+
 </Project>

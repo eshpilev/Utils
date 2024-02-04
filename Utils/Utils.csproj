@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="BizArk.Core" Version="4.0.1.50" />
+    <PackageReference Include="CsvHelper" Version="30.1.0" />
     <PackageReference Include="libphonenumber-csharp" Version="8.13.27" />
   </ItemGroup>
 
