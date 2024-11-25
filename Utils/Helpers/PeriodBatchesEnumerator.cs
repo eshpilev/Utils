@@ -40,13 +40,15 @@ namespace Utils.Helpers
                     .Skip(_batch * Settings.BatchSize)
                     .Take(Settings.BatchSize)
                     .ToArray();
-                _getNextPeriod = messages.Length < Settings.BatchSize || messages.Length == 0;
-                _batch++;
+                _getNextPeriod = messages.Length < Settings.BatchSize;
+                
                 return messages;
             }
         }
         public bool MoveNext()
         {
+            _batch++;
+
             if (_getNextPeriod)
             {
                 _batch = 0;
@@ -109,15 +111,19 @@ namespace Utils.Helpers
                     CreateDateTime = currentDate
                 });
             }
+            List<DemoRecord[]> ret = new List<DemoRecord[]>();
             batches.Query = records.AsQueryable().OrderBy(x => x.Hash);
             var batchNum = 0;
             while (batches.MoveNext())
             {
                 Console.WriteLine($"BatchNum:{batchNum}");
+                ret.Add(batches.Current.ToArray());
                 foreach (var record in batches.Current!)
                     Console.WriteLine($"Hash:{record.Hash}, CreateDateTime:{record.CreateDateTime}");
                 batchNum++;
             }
+
+            var t = ret.SelectMany(x => x);
         }
     }
 

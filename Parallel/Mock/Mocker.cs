@@ -8,7 +8,7 @@ namespace ParallelPages.Mock
 {
     public static class Mocker
     {
-        public static readonly string BigText = string.Join("_____", Enumerable.Range(0, 1000));
+        public static readonly string BigText = string.Join("_____", Enumerable.Range(0, 10000));
 
         public static WireMockServer CreateWireMockServer(string url, int limit, int total, int delay)
         {
